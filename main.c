@@ -6,8 +6,14 @@
 #include <pthread.h>
 #include <time.h>
 #include <sys/time.h>
+#include <stdio.h>
+#include "weather/weather.h"
 
 #define DISP_BUF_SIZE (128 * 1024)
+
+//剑阁县的adcode
+#define  ADCODE "510823" 
+
 
 int main(void)
 {
@@ -51,7 +57,28 @@ int main(void)
 
 
     /*Create a Demo*/
-    lv_demo_widgets();
+    //lv_demo_widgets();
+    char weather[100];
+    //获取天气
+    strcpy(weather, get_weather(ADCODE));
+    printf("weather:%s\n", weather);
+    LV_FONT_DECLARE(Font) /* 声明字体 */ 
+
+    lv_obj_t * weather_lable = lv_label_create(lv_scr_act());
+    lv_obj_align(weather_lable, LV_ALIGN_TOP_LEFT, 100, 100);
+    lv_obj_set_style_text_font(weather_lable, &Font, LV_STATE_DEFAULT); 
+
+    lv_label_set_text(weather_lable, weather);
+
+    if(strstr(weather, "晴"))
+    {
+        LV_IMG_DECLARE(sunny);
+        lv_obj_t * lv_weather_img = lv_img_create(lv_scr_act());
+        lv_img_set_src(lv_weather_img, &sunny);
+        lv_obj_move_background(lv_weather_img);
+    }
+
+    
 
     /*Handle LitlevGL tasks (tickless mode)*/
     while(1) {

@@ -13,10 +13,11 @@ BIN = demo
 MAINSRC = ./main.c
 
 include $(LVGL_DIR)/lvgl/lvgl.mk
-include $(LVGL_DIR)/lv_drivers/lv_drivers.mk
+include $(LVGL_DIR)/lv_drivers/lv_drivers.mk 
 
-CSRCS +=$(LVGL_DIR)/mouse_cursor_icon.c 
-
+CSRCS +=$(LVGL_DIR)/mouse_cursor_icon.c Font.c
+CSRCS +=$(LVGL_DIR)/weather/weather.c
+CSRCS +=$(LVGL_DIR)/weather/sunny.c
 OBJEXT ?= .o
 
 AOBJS = $(ASRCS:.S=$(OBJEXT))
