@@ -60,16 +60,24 @@ int main(void)
     //lv_demo_widgets();
     char weather[100];
     //获取天气
-    strcpy(weather, get_weather(ADCODE));
+    //strcpy(weather, get_weather(ADCODE));
+    strcpy(weather, "晴天");
     printf("weather:%s\n", weather);
+    
+    lv_obj_t * obj = lv_obj_create(lv_scr_act()); 
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0x87CEFA),LV_STATE_DEFAULT);
+    
+    lv_obj_set_size(obj, 200, 200);
+    lv_obj_align(obj, LV_ALIGN_CENTER, 0, 0);
     LV_FONT_DECLARE(Font) /* 声明字体 */ 
 
-    lv_obj_t * weather_lable = lv_label_create(lv_scr_act());
-    lv_obj_align(weather_lable, LV_ALIGN_TOP_LEFT, 100, 100);
+    lv_obj_t * weather_lable = lv_label_create(obj);
+    lv_obj_align(weather_lable, LV_ALIGN_CENTER, 0, 0);
     lv_obj_set_style_text_font(weather_lable, &Font, LV_STATE_DEFAULT); 
-
+    
     lv_label_set_text(weather_lable, weather);
-
+    
+    //背景图
     if(strstr(weather, "晴"))
     {
         LV_IMG_DECLARE(sunny);
