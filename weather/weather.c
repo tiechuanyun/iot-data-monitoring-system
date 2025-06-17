@@ -86,7 +86,7 @@ char * get_weather(char * city_adcode)
     printf("adcode：%s\n", adcode);
     printf("天气：%s\n", weather);
     static char temp_str2[500];
-    sprintf(temp_str2, " %s  %s  %s ", province, city, weather);
+    sprintf(temp_str2, "%s\n%s\n%s\n", province, city, weather);
     //关闭套接字
     close(socket_fd);
     return temp_str2;

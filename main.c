@@ -8,11 +8,16 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include "weather/weather.h"
-
+#include "time/time.h"
+#include <pthread.h> //pthread_create
+#include <unistd.h>
 #define DISP_BUF_SIZE (128 * 1024)
 
 //剑阁县的adcode
-#define  ADCODE "510823" 
+//#define  ADCODE "510823" 
+//韶关市的adcode
+#define  ADCODE "440200"
+
 
 
 int main(void)
@@ -60,31 +65,76 @@ int main(void)
     //lv_demo_widgets();
     char weather[100];
     //获取天气
-    //strcpy(weather, get_weather(ADCODE));
-    strcpy(weather, "晴天");
-    printf("weather:%s\n", weather);
+    strcpy(weather, get_weather(ADCODE));
+    //strcpy(weather, "晴天");
+    printf("weather:%s", weather);
     
-    lv_obj_t * obj = lv_obj_create(lv_scr_act()); 
-    lv_obj_set_style_bg_color(obj, lv_color_hex(0x87CEFA),LV_STATE_DEFAULT);
-    
-    lv_obj_set_size(obj, 200, 200);
-    lv_obj_align(obj, LV_ALIGN_CENTER, 0, 0);
-    LV_FONT_DECLARE(Font) /* 声明字体 */ 
+    LV_IMG_DECLARE(sunny);
+    lv_obj_t * lv_weather_img = lv_img_create(lv_scr_act());
+    lv_img_set_src(lv_weather_img, &sunny);
+    lv_obj_move_background(lv_weather_img);
 
+
+    //主界面背景
+    lv_obj_t * obj = lv_obj_create(lv_scr_act()); 
+    lv_obj_set_size(obj, 800, 480);
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0xADD8E6), LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(obj, 100, LV_STATE_DEFAULT);
+    lv_obj_align(obj, LV_ALIGN_CENTER, 0, 0);
+
+    LV_FONT_DECLARE(Font60) /* 声明字体 */ 
     lv_obj_t * weather_lable = lv_label_create(obj);
-    lv_obj_align(weather_lable, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_font(weather_lable, &Font, LV_STATE_DEFAULT); 
+    lv_obj_align(weather_lable, LV_ALIGN_TOP_MID, 0, 0);
+    lv_obj_set_style_text_font(weather_lable, &Font60, LV_STATE_DEFAULT); 
+    lv_label_set_text(weather_lable, "物联网IOT数据监测平台");
+
+    LV_FONT_DECLARE(Font) /* 声明字体 */ 
+    //天气框
+    lv_obj_t * obj1 = lv_obj_create(obj); 
+    lv_obj_set_size(obj1, 200, 200);
+    lv_obj_align(obj1, LV_ALIGN_CENTER, 250, 20);
+    lv_obj_set_style_bg_color(obj1, lv_color_hex(0xF0F8FF), LV_STATE_DEFAULT);
+
+    //天气文本
+    lv_obj_t * weather_lable1 = lv_label_create(obj1);
+    lv_obj_align(weather_lable1, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_font(weather_lable1, &Font, LV_STATE_DEFAULT);
+    lv_label_set_text(weather_lable1, weather);
+
+    //温湿度框
+    lv_obj_t * obj2 = lv_obj_create(obj); 
+    lv_obj_set_size(obj2, 200, 200);
+    lv_obj_align(obj2, LV_ALIGN_CENTER, 0, 20);
+    lv_obj_set_style_bg_color(obj2, lv_color_hex(0xF0F8FF), LV_STATE_DEFAULT);
+
+    //温湿度文本
+    lv_obj_t * DHT11_lable1 = lv_label_create(obj2);
+    lv_obj_align(DHT11_lable1, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_font(DHT11_lable1, &Font, LV_STATE_DEFAULT);
+    lv_label_set_text(DHT11_lable1, "60°C\n80%RH");
+
+    //实时时间框
+    lv_obj_t * obj3 = lv_obj_create(obj); 
+    lv_obj_set_size(obj3, 200, 200);
+    lv_obj_align(obj3, LV_ALIGN_CENTER, -250, 20);
+    lv_obj_set_style_bg_color(obj3, lv_color_hex(0xF0F8FF), LV_STATE_DEFAULT);
+
+    //实时时间文本
+    lv_obj_t * time_lable = lv_label_create(obj3);
+    lv_obj_align(time_lable, LV_ALIGN_CENTER, 0, 0);
+    lv_label_set_text(time_lable, "2022-12-12\n12:12:12");
     
-    lv_label_set_text(weather_lable, weather);
     
-    //背景图
-    if(strstr(weather, "晴"))
+
+
+    //创建时间现场
+    pthread_t time_id;
+    int pf = pthread_create(&time_id, NULL, routing_time, (void *)time_lable);//(线程id, 默认线程属性, 线程函数, 不传递参数给线程函数)
+    if(pf != 0)
     {
-        LV_IMG_DECLARE(sunny);
-        lv_obj_t * lv_weather_img = lv_img_create(lv_scr_act());
-        lv_img_set_src(lv_weather_img, &sunny);
-        lv_obj_move_background(lv_weather_img);
-    }
+        //线程创建失败
+        printf("pthread_create error\n");
+    } 
 
     
 
