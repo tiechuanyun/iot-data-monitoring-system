@@ -11,6 +11,9 @@
 #include "time/time.h"
 #include <pthread.h> //pthread_create
 #include <unistd.h>
+#include "dht11/dht11.h"
+#include "aliyun_client/aliyun_client.h"
+
 #define DISP_BUF_SIZE (128 * 1024)
 
 //剑阁县的adcode
@@ -111,7 +114,7 @@ int main(void)
     lv_obj_t * DHT11_lable1 = lv_label_create(obj2);
     lv_obj_align(DHT11_lable1, LV_ALIGN_CENTER, 0, 0);
     lv_obj_set_style_text_font(DHT11_lable1, &Font, LV_STATE_DEFAULT);
-    lv_label_set_text(DHT11_lable1, "60°C\n80%RH");
+    //lv_label_set_text(DHT11_lable1, "60°C\n80%RH");
 
     //实时时间框
     lv_obj_t * obj3 = lv_obj_create(obj); 
@@ -122,7 +125,8 @@ int main(void)
     //实时时间文本
     lv_obj_t * time_lable = lv_label_create(obj3);
     lv_obj_align(time_lable, LV_ALIGN_CENTER, 0, 0);
-    lv_label_set_text(time_lable, "2022-12-12\n12:12:12");
+    lv_obj_set_style_text_font(time_lable, &Font, LV_STATE_DEFAULT);
+    //lv_label_set_text(time_lable, "2022-12-12\n12:12:12");
     
     
 
@@ -131,6 +135,24 @@ int main(void)
     pthread_t time_id;
     int pf = pthread_create(&time_id, NULL, routing_time, (void *)time_lable);//(线程id, 默认线程属性, 线程函数, 不传递参数给线程函数)
     if(pf != 0)
+    {
+        //线程创建失败
+        printf("pthread_create error\n");
+    } 
+
+    //创建温湿度现场
+    pthread_t DHT11_id;
+    int pf2 = pthread_create(&DHT11_id, NULL, routing_dht11, (void *)DHT11_lable1);//(线程id, 默认线程属性, 线程函数, 不传递参数给线程函数)
+    if(pf2 != 0)
+    {
+        //线程创建失败
+        printf("pthread_create error\n");
+    } 
+
+    //创建阿里云现场
+    pthread_t aliyun_id;
+    int pf3 = pthread_create(&aliyun_id, NULL, routing_aliyun, NULL);//(线程id, 默认线程属性, 线程函数, 不传递参数给线程函数)
+    if(pf3 != 0)
     {
         //线程创建失败
         printf("pthread_create error\n");

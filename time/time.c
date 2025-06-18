@@ -93,7 +93,7 @@ void *routing_time(void* arg)
         }
         //printf("year:%d, month:%d, day:%d, hour:%d, minute:%d, second:%d\n", year, month, day, hour, minute, second);
         char time_str[20] = {0};
-        sprintf(time_str, "%d-%d-%d %d:%d:%d", year, month, day, hour, minute, second);
+        sprintf(time_str, "%d-%d-%d\n%d:%d:%d", year, month, day, hour, minute, second);
         printf("time_str:%s\n",time_str);
         lv_label_set_text((lv_obj_t *)arg, time_str); //更新时间标签
     

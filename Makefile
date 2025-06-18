@@ -20,6 +20,8 @@ CSRCS +=$(LVGL_DIR)/weather/weather.c
 CSRCS +=$(LVGL_DIR)/weather/sunny.c
 
 CSRCS +=$(LVGL_DIR)/time/time.c
+CSRCS +=$(LVGL_DIR)/dht11/dht11.c
+CSRCS +=$(LVGL_DIR)/aliyun_client/aliyun_client.c
 
 OBJEXT ?= .o
 
