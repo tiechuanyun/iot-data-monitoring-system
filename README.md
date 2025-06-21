@@ -12,3 +12,5 @@ LVGL仓库链接：https://github.com/lvgl
 （适用于粤嵌的GEC6818开发板，当然其他的它也可以）
 触摸屏文件：/dev/input/event0  坐标范围 1024---600
 LCD文件：/dev/fb0 像素范围 800---600
+### 注意事项
+代码中的高德天气API和实时时间API的密钥KEY都需要自己去更改。
